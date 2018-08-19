@@ -125,7 +125,7 @@ window.addEventListener("message",function(e){
 },false);
 
 window.onpopstate=function(e){
-	if(e.state&&e.state.isReload&&src!=page.src){
+	if(e.state&&e.state.isReload&&e.page.src!=page.src){
 		page.src=e.state.src;
 		return;
 	}
