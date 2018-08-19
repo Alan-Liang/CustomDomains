@@ -13,7 +13,7 @@ var isSameVersion=function(obj){
 	if(!obj)return false;
 	obj=obj.__meta;
 	if(!obj) return false;
-	var ideal=getBasicObject().__meta;
+	var ideal=addMeta({}).__meta;
 	if(obj.version==ideal.version&&obj.name==ideal.name)
 		return true;
 	else return false;
