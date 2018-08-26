@@ -3,7 +3,7 @@ var debug=function(str){
 };
 var addMeta=function(obj){
 	var __meta={
-		version:1,
+		version:3,
 		name:"CustomDomains"
 	};
 	obj.__meta=__meta;
@@ -18,8 +18,23 @@ var isSameVersion=function(obj){
 		return true;
 	else return false;
 };
+var domain="*";
+if(document.currentScript){
+	//use current script
+	var source=document.currentScript.getAttribute("domain")||document.currentScript.getAttribute("data-domain");
+	if(source){
+		domain=source;
+	}
+}else{
+	var scriptsA=document.querySelector("script[domain]");
+	var scriptsB=document.querySelector("script[data-domain]");
+	var script=scriptsA||scriptsB;
+	if(script){
+		domain=script.getAttribute(scriptA?"domain":"data-domain");
+	}
+}
 var sendMsg=function(msg){
-	return parent.postMessage(addMeta(msg),"*");
+	return parent.postMessage(addMeta(msg),domain);
 };
 window.addEventListener("message",function(e){
 	if(!isSameVersion(e.data)){
@@ -40,6 +55,12 @@ window.addEventListener("message",function(e){
 	}
 },false);
 sendMsg({id:0,type:"pageload",title:document.title,location:location.href});
+setTimeout(function(){
+	var viewport=document.querySelector("meta[name='viewport']");
+	if(viewport){
+		sendMsg({id:1,type:"viewport",viewport:viewport.getAttribute("content")});
+	}
+},10);
 var realConsole={};
 var consoles="log|info|dir|warn|error|debug".split("|");
 var arrify=function(args){
